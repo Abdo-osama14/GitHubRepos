@@ -9,8 +9,7 @@ class UserRepositoryImpl @Inject constructor(private val api: GithubReposService
 
 
     override suspend fun getUserData(): List<UserData> =
-        api.getAllRepositories().dropLast(50).map { userModelItem ->
+        api.getAllRepositories().map { userModelItem ->
             api.getUserData(userModelItem.owner.login,userModelItem.name)
        }
-
 }

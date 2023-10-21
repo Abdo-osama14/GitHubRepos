@@ -7,7 +7,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.internal.addHeaderLenient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,11 +22,21 @@ object RepoDiModule {
     @Provides
     @Singleton
     fun provideRepoApi() : GithubReposService {
+        val authToken = "Bearer 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"
         val retrofit by lazy {
+
             val logging = HttpLoggingInterceptor()
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
             val client = OkHttpClient.Builder()
                 .addInterceptor(logging)
+                .addInterceptor {
+                    val original = it.request()
+                    val request = original.newBuilder()
+                        .header("Authorization",authToken)
+                        .method(original.method,original.body)
+                        .build()
+                    it.proceed(request)
+                }
                 .build()
             Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
