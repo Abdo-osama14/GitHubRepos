@@ -22,7 +22,7 @@ object RepoDiModule {
     @Provides
     @Singleton
     fun provideRepoApi() : GithubReposService {
-        val authToken = "Bearer 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"
+        val authToken = "Bearer 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"
         val retrofit by lazy {
 
             val logging = HttpLoggingInterceptor()
